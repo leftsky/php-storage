@@ -10,7 +10,8 @@
   "license": "MIT",
   "autoload": {
     "psr-4": {
-      "Leftsky\\Storage\\": "src/"
+      "Leftsky\\Storage\\": "src/",
+      "psr-4": { "OpenAPI\\Client\\" : "libs/baiduyunpan/lib/" }
     },
     "files": [
       "src/helps.php"
@@ -20,6 +21,7 @@
     "php": "^8.0|^7.3",
     "ext-json": "*",
     "aliyuncs/oss-sdk-php": "^2.6",
-    "leftsky/php-help": "^0.0.3"
+    "leftsky/php-help": "^0.0.3",
+    "guzzlehttp/guzzle": "^7.5"
   }
 }

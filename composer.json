@@ -11,7 +11,7 @@
   "autoload": {
     "psr-4": {
       "Leftsky\\Storage\\": "src/",
-      "psr-4": { "OpenAPI\\Client\\" : "libs/baiduyunpan/lib/" }
+      "OpenAPI\\Client\\" : "libs/baiduyunpan/lib/"
     },
     "files": [
       "src/helps.php"

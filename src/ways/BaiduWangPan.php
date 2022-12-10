@@ -6,6 +6,7 @@ use GuzzleHttp\Client;
 use OpenAPI\Client\Api\AuthApi;
 use OpenAPI\Client\Api\FileinfoApi;
 use OpenAPI\Client\Api\FileuploadApi;
+use OpenAPI\Client\Api\MultimediafileApi;
 use OpenAPI\Client\Api\UserinfoApi;
 
 class BaiduWangPan extends Base
@@ -208,6 +209,25 @@ class BaiduWangPan extends Base
         return 0;
     }
 
+    private function getFileMetas($fids)
+    {
+        $access_token = $this->token;
+        $thumb = "0";                 // string |  (optional)
+        $extra = "0";                 // string |  (optional)
+        $fsids = "[" . implode(",", $fids) . "]"; // string
+        $dlink = "1";                 // string |  (optional)
+        $needmedia = 1; // int
+
+        $apiInstance = new MultimediafileApi(new Client());
+
+        try {
+            return $apiInstance->xpanmultimediafilemetas($access_token, $fsids, $thumb, $extra, $dlink, "", $needmedia);
+        } catch (\Exception $e) {
+//            echo 'Exception when calling MultimediafileApi->xpanmultimediafilemetas: ', $e->getMessage(), PHP_EOL;
+        }
+        return null;
+    }
+
     /**
      * 查询文件是否存在
      * @param $path
@@ -236,12 +256,16 @@ class BaiduWangPan extends Base
 
         try {
             $result = $apiInstance->xpanfilesearch($access_token, $key, $web, $num, $page, $dir, $recursion);
-//            print_r($result);
+            $fids = array_map(function ($item) {
+                return $item["fs_id"];
+            }, $result["list"] ?? []);
+            return $this->getFileMetas($fids);
+            //            return $this->getFileMetas();
+            //            print_r($result);
         } catch (\Exception $e) {
             return false;
 //            echo 'Exception when calling FileinfoApi->xpanfilesearch: ', $e->getMessage(), PHP_EOL;
         }
-        return true;
     }
 
 }

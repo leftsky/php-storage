@@ -217,11 +217,15 @@ class BaiduWangPan extends Base
         $fsids = "[" . implode(",", $fids) . "]"; // string
         $dlink = "1";                 // string |  (optional)
         $needmedia = 1; // int
-
         $apiInstance = new MultimediafileApi(new Client());
 
         try {
-            return $apiInstance->xpanmultimediafilemetas($access_token, $fsids, $thumb, $extra, $dlink, "", $needmedia);
+            $result = $apiInstance->xpanmultimediafilemetas($access_token, $fsids, $thumb, $extra, $dlink, "", $needmedia);
+            if (!is_json($result)) return false;
+            $result = json_decode($result, true);
+            return array_map(function ($item) {
+                return $item["dlink"];
+            }, $result["list"] ?? []);
         } catch (\Exception $e) {
 //            echo 'Exception when calling MultimediafileApi->xpanmultimediafilemetas: ', $e->getMessage(), PHP_EOL;
         }
@@ -233,7 +237,7 @@ class BaiduWangPan extends Base
      * @param $path
      * @return bool
      */
-    public function getFileInfo($path): bool
+    public function getFileInfo($path)
     {
         $access_token = $this->token;
         $dirs = explode("/", $path);
@@ -256,6 +260,8 @@ class BaiduWangPan extends Base
 
         try {
             $result = $apiInstance->xpanfilesearch($access_token, $key, $web, $num, $page, $dir, $recursion);
+            if (!is_json($result)) return false;
+            $result = json_decode($result, true);
             $fids = array_map(function ($item) {
                 return $item["fs_id"];
             }, $result["list"] ?? []);

@@ -50,14 +50,22 @@ class Alioss extends Base
     }
 
     /**
-     * 自动检测 request 中单个file文件，上传至oss并返回路径
+     * 【Laravel 请求专属】自动检测 request 中单个file文件，上传至oss并返回路径
      * @param $file
      * @return string
      */
     public function ossUpload($file): string
     {
-        $extension = $file->getClientOriginalExtension();
-        $path = $file->path();
+        return $this->uploadFromPath($file->path(), $file->getClientOriginalExtension());
+    }
+
+    /**
+     * 从 path 上传至 oss
+     * @param string $path 文件路径
+     * @param string $extension 文件后缀
+     */
+    public function uploadFromPath(string $path, string $extension): string
+    {
         $rand = rand(100000, 999999);
         $now = date("Y-m-d_H_i_s_", time());
         $uri = $this->config["folder"] . $now . $rand . "." . $extension;
@@ -65,4 +73,5 @@ class Alioss extends Base
         $ossClient->putObject($this->config['bucket'], $uri, file_get_contents($path));
         return "{$this->config["domain"]}/$uri";
     }
+
 }

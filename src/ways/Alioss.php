@@ -70,7 +70,8 @@ class Alioss extends Base
         $now = date("Y-m-d_H_i_s_", time());
         $uri = $this->config["folder"] . $now . $rand . "." . $extension;
         $ossClient = $this->getOssHandle();
-        $ossClient->putObject($this->config['bucket'], $uri, file_get_contents($path));
+        $ossClient->uploadFile($this->config['bucket'], $uri, $path);
+//        $ossClient->putObject($this->config['bucket'], $uri, file_get_contents($path));
         return "{$this->config["domain"]}/$uri";
     }
 
